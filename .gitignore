@@ -61,3 +61,4 @@ mongodata/
 htmlcov/
 .coverage
 .pytest_cache/
+.vercel

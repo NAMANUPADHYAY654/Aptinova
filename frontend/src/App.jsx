@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Users, Settings, LogOut, BrainCircuit } from 'lucide-react';
+import { LayoutDashboard, Users, Settings, LogOut, BrainCircuit, Briefcase } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
 import Dashboard from './components/Dashboard';
 import CandidateList from './components/CandidateList';
+import JobsManager from './components/JobsManager';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -10,7 +11,7 @@ function App() {
   return (
     <div className="app-container">
       <Toaster position="top-right" toastOptions={{
-        style: { background: '#1e293b', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }
+        style: { background: '#0a0a0f', color: '#fff', border: '1px solid var(--accent)' }
       }} />
 
       {/* Sidebar Navigation */}
@@ -27,6 +28,13 @@ function App() {
           >
             <LayoutDashboard size={20} />
             <span>Dashboard</span>
+          </div>
+          <div
+            className={`nav-item ${activeTab === 'jobs' ? 'active' : ''}`}
+            onClick={() => setActiveTab('jobs')}
+          >
+            <Briefcase size={20} />
+            <span>Jobs</span>
           </div>
           <div
             className={`nav-item ${activeTab === 'candidates' ? 'active' : ''}`}
@@ -55,6 +63,7 @@ function App() {
       {/* Main Content Area */}
       <div className="main-content">
         {activeTab === 'dashboard' && <Dashboard />}
+        {activeTab === 'jobs' && <JobsManager />}
         {activeTab === 'candidates' && <CandidateList />}
         {activeTab === 'settings' && (
           <div>

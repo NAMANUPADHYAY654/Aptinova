@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Upload, ChevronDown, CheckCircle, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import UploadModal from './UploadModal';
+import CandidateProfile from './CandidateProfile';
 
 export default function CandidateList() {
     const [jobs, setJobs] = useState([]);
@@ -10,6 +11,7 @@ export default function CandidateList() {
     const [candidates, setCandidates] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCandidateProfile, setSelectedCandidateProfile] = useState(null);
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
     // Fetch jobs on mount
@@ -144,7 +146,43 @@ export default function CandidateList() {
                                             <ScoreBar score={cand.score} />
                                         </td>
                                         <td>
-                                            <button className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }}>View Profile</button>
+                                            <button 
+                                                className="btn btn-secondary" 
+                                                style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                                                onClick={() => setSelectedCandidateProfile(cand)}
+                                            >
+                                                View Profile
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                candidates.map((cand) => (
+                                    <tr key={cand.id}>
+                                        <td>
+                                            <div style={{ fontWeight: 600 }}>{cand.name}</div>
+                                            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{cand.email}</div>
+                                        </td>
+                                        <td>{cand.experience_years} years</td>
+                                        <td>
+                                            <div style={{ maxWidth: '250px', display: 'flex', flexWrap: 'wrap' }}>
+                                                {cand.skills.slice(0, 4).map(s => (
+                                                    <span key={s} className="badge-skill">{s}</span>
+                                                ))}
+                                                {cand.skills.length > 4 && <span className="badge-skill">+{cand.skills.length - 4}</span>}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <ScoreBar score={cand.job_fit_score || 0} />
+                                        </td>
+                                        <td>
+                                            <button 
+                                                className="btn btn-secondary" 
+                                                style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                                                onClick={() => setSelectedCandidateProfile(cand)}
+                                            >
+                                                View Profile
+                                            </button>
                                         </td>
                                     </tr>
                                 ))
@@ -161,6 +199,11 @@ export default function CandidateList() {
                     onUploadSuccess={() => fetchCandidates(selectedJob?.id)}
                 />
             )}
+
+            <CandidateProfile 
+                candidate={selectedCandidateProfile} 
+                onClose={() => setSelectedCandidateProfile(null)} 
+            />
         </div>
     );
 }
